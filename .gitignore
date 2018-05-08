@@ -1,0 +1,27 @@
+*.pyc
+*.pyo
+*.egg-info
+dist
+build
+tmp
+.tox
+docs/_build
+
+__pycache__
+
+# Test outputs
+.cache
+.pytest_cache
+__output__
+
+# vim, mac os
+*.sw*
+.DS_Store
+.*.un~
+
+# git
+
+*.orig
+.coverage
+
+
