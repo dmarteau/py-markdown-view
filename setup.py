@@ -31,6 +31,10 @@ setup(
             'markdown-display = markdown_display.viewer:main',
         ],
     },
+    package_data={'markdown_display': [
+            "markdown_display/css/markdown.css",
+            "markdown_display/css/pygments.css",
+        ]},
     classifiers=[
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.5",

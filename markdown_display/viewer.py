@@ -8,6 +8,26 @@ from urllib.parse import urlparse
 
 MARKDOWN_EXTS = ('.md','.markdown','.mdown','mkdn', 'mdwn', 'mkd')
 
+script_dir = os.path.dirname(os.path.realpath(__file__))
+
+HTML_HEAD="""
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{path}</title>
+    <link href="/css/markdown.css" rel="stylesheet">
+    <link href="/css/pygments.css" rel="stylesheet">
+</head>
+<body style="background-color: white;">
+<div class="html-output markdown-body" id="html_result" style="overflow: auto; height:100%">
+"""
+
+HTML_FOOT="""
+</div>
+</body>
+</html>
+"""
+
 def serve_files(path):
     """ Return either a directory listing
     """
@@ -23,7 +43,7 @@ def serve_files(path):
             # Convert markdown to HTML
             with open(path,'r') as fp:
                 html = markdown(fp.read())
-            return html    
+            return HTML_HEAD.format(path=path) + html + HTML_FOOT    
         else:
             # Return static file
             filename = os.path.basename(path)
@@ -38,12 +58,18 @@ def route_handler():
     host  = request.get_header('host')
     return '<form><button formaction="http://{0}/close">Close</button></form>'.format(host)
 
+
 @route('/close')
 def close_handler():
     """ Kill ourselve with SIGTERM
     """
     import  signal
     os.kill(os.getpid(), signal.SIGTERM)
+
+
+@route('/css/<path:path>')
+def style_handler(path):
+    return static_file(path,os.path.join(script_dir, 'css'))
 
 
 @route('/files/')
