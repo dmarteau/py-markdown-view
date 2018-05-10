@@ -2,9 +2,11 @@
 """
 import os
 import mimetypes
-from markdown import markdown
 from bottle import route, static_file, abort, request, run
 from urllib.parse import urlparse
+
+import markdown
+from mdx_gfm import GithubFlavoredMarkdownExtension
 
 MARKDOWN_EXTS = ('.md','.markdown','.mdown','mkdn', 'mdwn', 'mkd')
 
@@ -28,6 +30,8 @@ HTML_FOOT="""
 </html>
 """
 
+mkdown = markdown.Markdown(extensions=[GithubFlavoredMarkdownExtension()]) 
+
 def serve_files(path):
     """ Return either a directory listing
     """
@@ -42,7 +46,7 @@ def serve_files(path):
         if ext.lower() in MARKDOWN_EXTS:
             # Convert markdown to HTML
             with open(path,'r') as fp:
-                html = markdown(fp.read())
+                html = mkdown.convert(fp.read())
             return HTML_HEAD.format(path=path) + html + HTML_FOOT    
         else:
             # Return static file
